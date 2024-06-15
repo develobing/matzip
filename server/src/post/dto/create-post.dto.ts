@@ -5,7 +5,7 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-import { MarkerColor } from '../marker-color.enum';
+import { MarkerColor } from '@/marker-color.enum';
 
 export class CreatePostDto {
   @IsNotEmpty()
