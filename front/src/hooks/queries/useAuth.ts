@@ -108,6 +108,7 @@ function useAuth() {
     signupMutation,
     loginMutation,
     logoutMutation,
+    getProfileQuery,
     isLogin,
     getProfile,
   };
