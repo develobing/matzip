@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00C37FA82C20A15B003B75E8 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00C37FA52C1F2D9F003B75E8 /* Ionicons.ttf */; };
+		00C37FA92C20A15B003B75E8 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00C37FA62C1F2D9F003B75E8 /* MaterialIcons.ttf */; };
+		00C37FAA2C20A15B003B75E8 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00C37FA72C1F2D9F003B75E8 /* Octicons.ttf */; };
 		00E356F31AD99517003FC87E /* frontTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* frontTests.m */; };
 		0C80B921A6F3F58F76C31292 /* libPods-front.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-front.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
@@ -260,6 +263,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00C37FA82C20A15B003B75E8 /* Ionicons.ttf in Resources */,
+				00C37FA92C20A15B003B75E8 /* MaterialIcons.ttf in Resources */,
+				00C37FAA2C20A15B003B75E8 /* Octicons.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				F61F2274CD93F1272805F223 /* PrivacyInfo.xcprivacy in Resources */,
@@ -604,7 +610,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -676,7 +685,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

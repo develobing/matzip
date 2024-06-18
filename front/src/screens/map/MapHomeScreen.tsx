@@ -1,4 +1,8 @@
-import {colors} from '@/constants';
+import CustomMarker from '@/components/CustomMarker';
+import MarkerModal from '@/components/MarkerModal';
+import {alerts, colors, mapNavigations} from '@/constants';
+import useGetMarkers from '@/hooks/queries/useGetMarkers';
+import useModal from '@/hooks/useModal';
 import usePermission from '@/hooks/usePermission';
 import useUserLocation from '@/hooks/useUserLocation';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
@@ -7,9 +11,14 @@ import mapStyle from '@/style/mapStyle';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useRef} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import React, {useRef, useState} from 'react';
+import {Alert, Pressable, StyleSheet, View} from 'react-native';
+import MapView, {
+  Callout,
+  LatLng,
+  LongPressEvent,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -27,9 +36,21 @@ function MapHomeScreen({}: MapHomeScreenProps) {
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<Navigation>();
   const {userLocation, isUserLocationError} = useUserLocation();
+  const [selectLocation, setSelectLocation] = useState<LatLng | null>(null);
+  const [markerId, setMarkerId] = useState<number | null>(null);
+  const markerModal = useModal();
   const mapRef = useRef<MapView | null>(null);
+  const {data: markers = []} = useGetMarkers();
 
   usePermission('LOCATION');
+
+  const moveMapView = (coordinate: LatLng) => {
+    mapRef.current?.animateToRegion({
+      ...coordinate,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+  };
 
   const handlePressUserLocation = () => {
     if (isUserLocationError) {
@@ -37,12 +58,29 @@ function MapHomeScreen({}: MapHomeScreenProps) {
       return;
     }
 
-    mapRef.current?.animateToRegion({
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
+    moveMapView(userLocation);
+  };
+
+  const handlePressMarker = (id: number, coordinate: LatLng) => {
+    moveMapView(coordinate);
+    setMarkerId(id);
+    markerModal.show();
+  };
+
+  const handlePressAddPost = () => {
+    if (!selectLocation) {
+      return Alert.alert(
+        alerts.NOT_SELECTED_LOCATION.TITLE,
+        alerts.NOT_SELECTED_LOCATION.DESCRIPTION,
+      );
+    }
+
+    navigation.navigate(mapNavigations.ADD_POST, {location: selectLocation});
+    setSelectLocation(null);
+  };
+
+  const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
+    setSelectLocation(nativeEvent.coordinate);
   };
 
   return (
@@ -51,11 +89,32 @@ function MapHomeScreen({}: MapHomeScreenProps) {
         showsUserLocation
         followsUserLocation
         ref={mapRef}
-        showsMyLocationButton={false}
         provider={PROVIDER_GOOGLE}
+        showsMyLocationButton={false}
+        region={{
+          ...userLocation,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
         style={styles.container}
         customMapStyle={mapStyle}
-      />
+        onLongPress={handleLongPressMapView}>
+        {selectLocation && (
+          <Callout>
+            <CustomMarker color="PURPLE" coordinate={selectLocation} />
+          </Callout>
+        )}
+
+        {markers.map(({id, color, score, ...coordinate}) => (
+          <CustomMarker
+            key={id}
+            coordinate={coordinate}
+            score={score}
+            color={color}
+            onPress={() => handlePressMarker(id, coordinate)}
+          />
+        ))}
+      </MapView>
 
       <Pressable
         style={[styles.drawerButton, {top: inset.top || 20}]}
@@ -64,10 +123,20 @@ function MapHomeScreen({}: MapHomeScreenProps) {
       </Pressable>
 
       <View style={styles.buttonList}>
+        <Pressable style={styles.mapButton} onPress={handlePressAddPost}>
+          <MaterialIcons name="add" size={25} color={colors.WHITE} />
+        </Pressable>
+
         <Pressable style={styles.mapButton} onPress={handlePressUserLocation}>
           <MaterialIcons name="my-location" size={25} color={colors.WHITE} />
         </Pressable>
       </View>
+
+      <MarkerModal
+        markerId={markerId}
+        isVisible={markerModal.isVisible}
+        hide={markerModal.hide}
+      />
     </>
   );
 }
