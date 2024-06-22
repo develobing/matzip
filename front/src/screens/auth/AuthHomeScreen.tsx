@@ -3,7 +3,7 @@ import React from 'react';
 import {Image, SafeAreaView, View} from 'react-native';
 import {authNavigations} from '@/constants';
 import {AuthStackParamList} from '@/navigations/stack/AuthStackNavigator';
-import CustomButton from '@/components/CustomButton';
+import CustomButton from '@/components/common/CustomButton';
 
 type AuthHomeScreenProps = StackScreenProps<
   AuthStackParamList,

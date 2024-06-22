@@ -1,5 +1,5 @@
 import React from 'react';
-import HeaderButton from './HeaderButton';
+import HeaderButton from '../common/HeaderButton';
 
 interface AddPostHeaderRightProps {
   onSubmit: () => void;

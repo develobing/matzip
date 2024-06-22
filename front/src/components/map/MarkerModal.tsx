@@ -14,9 +14,21 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import useGetPost from '@/hooks/queries/useGetPost';
-import {colors} from '@/constants';
+import {
+  colors,
+  feedNavigations,
+  feedTabNavigations,
+  mainNavigations,
+} from '@/constants';
 import {getDateWithSeparator} from '@/utils';
-import CustomMarker from './CustomMarker';
+import CustomMarker from '../common/CustomMarker';
+import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
+import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {FeedTabParamList} from '@/navigations/tab/FeedTabNavigator';
 
 interface MarkerModalProps {
   markerId: number | null;
@@ -24,16 +36,37 @@ interface MarkerModalProps {
   hide: () => void;
 }
 
+type Navigation = CompositeNavigationProp<
+  DrawerNavigationProp<MainDrawerParamList>,
+  BottomTabNavigationProp<FeedTabParamList>
+>;
+
 function MarkerModal({markerId, isVisible, hide}: MarkerModalProps) {
+  const navigation = useNavigation<Navigation>();
   const {data: post, isPending, isError} = useGetPost(markerId);
   if (isPending || isError) {
     return <></>;
   }
 
+  const handlePressModal = () => {
+    navigation.navigate(mainNavigations.FEED, {
+      screen: feedTabNavigations.FEED_HOME,
+      params: {
+        screen: feedNavigations.FEED_DETAIL,
+        params: {
+          id: post.id,
+        },
+        initial: false,
+      },
+    });
+
+    hide();
+  };
+
   return (
     <Modal visible={isVisible} transparent={true} animationType={'slide'}>
       <SafeAreaView style={[styles.optionBackground]} onTouchEnd={hide}>
-        <Pressable style={styles.cardContainer} onPress={() => {}}>
+        <Pressable style={styles.cardContainer} onPress={handlePressModal}>
           <View style={styles.cardInner}>
             <View style={styles.cardAlign}>
               {post.images.length > 0 && (

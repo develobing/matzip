@@ -9,6 +9,10 @@ function useMutateCreatePost(options?: UseMutationCustomOptions) {
   return useMutation({
     mutationFn: createPost,
     onSuccess: newPost => {
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
+      });
+
       // 1. 조회 API 재호출 하는 방법
       // queryClient.invalidateQueries({
       //   queryKey: [queryKeys.MARKER, queryKeys.GET_MARKERS],

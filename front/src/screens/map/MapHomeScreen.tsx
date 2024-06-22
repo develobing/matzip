@@ -1,8 +1,9 @@
-import CustomMarker from '@/components/CustomMarker';
-import MarkerModal from '@/components/MarkerModal';
-import {alerts, colors, mapNavigations} from '@/constants';
+import CustomMarker from '@/components/common/CustomMarker';
+import MarkerModal from '@/components/map/MarkerModal';
+import {alerts, colors, mapNavigations, numbers} from '@/constants';
 import useGetMarkers from '@/hooks/queries/useGetMarkers';
 import useModal from '@/hooks/useModal';
+import useMoveMapView from '@/hooks/useMoveMapView';
 import usePermission from '@/hooks/usePermission';
 import useUserLocation from '@/hooks/useUserLocation';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
@@ -11,7 +12,7 @@ import mapStyle from '@/style/mapStyle';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {Alert, Pressable, StyleSheet, View} from 'react-native';
 import MapView, {
   Callout,
@@ -39,22 +40,13 @@ function MapHomeScreen({}: MapHomeScreenProps) {
   const [selectLocation, setSelectLocation] = useState<LatLng | null>(null);
   const [markerId, setMarkerId] = useState<number | null>(null);
   const markerModal = useModal();
-  const mapRef = useRef<MapView | null>(null);
   const {data: markers = []} = useGetMarkers();
+  const {mapRef, moveMapView, handleChangeDelta} = useMoveMapView();
 
   usePermission('LOCATION');
 
-  const moveMapView = (coordinate: LatLng) => {
-    mapRef.current?.animateToRegion({
-      ...coordinate,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
-  };
-
   const handlePressUserLocation = () => {
     if (isUserLocationError) {
-      // 에러 메시지 표시
       return;
     }
 
@@ -93,11 +85,11 @@ function MapHomeScreen({}: MapHomeScreenProps) {
         showsMyLocationButton={false}
         region={{
           ...userLocation,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          ...numbers.INITIAL_DELTA,
         }}
         style={styles.container}
         customMapStyle={mapStyle}
+        onRegionChangeComplete={handleChangeDelta}
         onLongPress={handleLongPressMapView}>
         {selectLocation && (
           <Callout>

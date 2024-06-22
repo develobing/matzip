@@ -5,7 +5,10 @@ const queryKeys = {
   MARKER: 'marker',
   GET_MARKERS: 'getMarkers',
   POST: 'post',
+  GET_POSTS: 'getPosts',
   GET_POST: 'getPost',
+  FAVORITE: 'favorite',
+  FAVORITE_POSTS: 'favoritePosts',
 } as const;
 
 const storageKeys = {
