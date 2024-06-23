@@ -1,9 +1,17 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
-import {Image, SafeAreaView, View} from 'react-native';
-import {authNavigations} from '@/constants';
+import {
+  Image,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {authNavigations, colors} from '@/constants';
 import {AuthStackParamList} from '@/navigations/stack/AuthStackNavigator';
 import CustomButton from '@/components/common/CustomButton';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type AuthHomeScreenProps = StackScreenProps<
   AuthStackParamList,
@@ -23,9 +31,25 @@ function AuthHomeScreen({navigation}: AuthHomeScreenProps) {
 
       <View style={styles.buttonContainer}>
         <CustomButton
-          label="로그인하기"
+          label="카카오 로그인하기"
+          icon={
+            <Ionicons name="chatbubble-sharp" size={20} color={'#181500'} />
+          }
+          style={styles.kakaoButtonContainer}
+          textStyle={styles.kakaoButtonText}
+          onPress={() => navigation.navigate(authNavigations.KAKAO)}
+        />
+        <CustomButton
+          label="이메일 로그인하기"
           onPress={() => navigation.navigate(authNavigations.LOGIN)}
         />
+
+        <Pressable
+          style={styles.emailTextContainer}
+          onPress={() => navigation.navigate(authNavigations.SIGNUP)}>
+          <Text style={styles.emailText}>이메일로 가입하기</Text>
+        </Pressable>
+
         <CustomButton
           label="회원가입하기"
           variant="outlined"
@@ -36,7 +60,7 @@ function AuthHomeScreen({navigation}: AuthHomeScreenProps) {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 30,
@@ -57,6 +81,23 @@ const styles = {
     flex: 1,
     gap: 10,
   },
-};
+
+  kakaoButtonContainer: {
+    backgroundColor: '#FEE503',
+  },
+
+  kakaoButtonText: {
+    color: '#181500',
+  },
+
+  emailTextContainer: {alignItems: 'center'},
+
+  emailText: {
+    textDecorationLine: 'underline',
+    fontWeight: '500',
+    padding: 10,
+    color: colors.BLACK,
+  },
+});
 
 export default AuthHomeScreen;
