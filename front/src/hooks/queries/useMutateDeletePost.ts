@@ -12,6 +12,9 @@ function useMutateDeletePost(options?: UseMutationCustomOptions) {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
       });
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.POST, queryKeys.GET_CALENDER_POSTS],
+      });
 
       // 1. 조회 API 재호출 하는 방법
       queryClient.invalidateQueries({

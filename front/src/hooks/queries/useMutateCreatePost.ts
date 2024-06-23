@@ -13,6 +13,15 @@ function useMutateCreatePost(options?: UseMutationCustomOptions) {
         queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
       });
 
+      queryClient.invalidateQueries({
+        queryKey: [
+          queryKeys.POST,
+          queryKeys.GET_CALENDER_POSTS,
+          new Date(newPost.date).getFullYear(),
+          new Date(newPost.date).getMonth() + 1,
+        ],
+      });
+
       // 1. 조회 API 재호출 하는 방법
       // queryClient.invalidateQueries({
       //   queryKey: [queryKeys.MARKER, queryKeys.GET_MARKERS],
