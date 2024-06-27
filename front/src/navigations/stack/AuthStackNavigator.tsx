@@ -19,13 +19,15 @@ function AuthStackNavigator({}) {
   return (
     <Stack.Navigator
       screenOptions={{
-        cardStyle: {backgroundColor: 'white'},
+        cardStyle: {
+          backgroundColor: 'white',
+        },
         headerStyle: {
           backgroundColor: 'white',
           shadowColor: 'gray',
         },
         headerTitleStyle: {
-          fontSize: 15,
+          fontSize: 20,
         },
         headerTintColor: 'black',
       }}>

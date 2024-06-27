@@ -1,7 +1,10 @@
 import {MutationFunction, useMutation, useQuery} from '@tanstack/react-query';
 import {useEffect} from 'react';
 import {
+  ResponseProfile,
   ResponseToken,
+  appleLogin,
+  editProfile,
   getAccessToken,
   getProfile,
   kakaoLogin,
@@ -58,6 +61,10 @@ function useKakaoLogin(options: UseMutationCustomOptions = {}) {
   return useLogin(kakaoLogin, options);
 }
 
+function useAppleLogin(options: UseMutationCustomOptions = {}) {
+  return useLogin(appleLogin, options);
+}
+
 function useGetRefreshToken() {
   const {data, isSuccess, isError} = useQuery({
     queryKey: [queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN],
@@ -85,10 +92,10 @@ function useGetRefreshToken() {
   return {isSuccess, isError};
 }
 
-function useGetProfile(options?: UseQueryCustomOptions) {
+function useGetProfile(options?: UseQueryCustomOptions<ResponseProfile>) {
   return useQuery({
-    queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
     queryFn: getProfile,
+    queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
 
     ...options,
   });
@@ -100,11 +107,22 @@ function useLogout(options?: UseMutationCustomOptions) {
     onSuccess: () => {
       removeHeader('Authorization');
       removeEncryptStorage(storageKeys.REFRESH_TOKEN);
+      queryClient.resetQueries({queryKey: [queryKeys.AUTH]});
     },
     onSettled: () => {
       queryClient.invalidateQueries({queryKey: [queryKeys.AUTH]});
     },
 
+    ...options,
+  });
+}
+
+function useUpdateProfile(options?: UseMutationCustomOptions) {
+  return useMutation({
+    mutationFn: editProfile,
+    onSuccess: newProfile => {
+      queryClient.setQueryData([queryKeys.AUTH], newProfile);
+    },
     ...options,
   });
 }
@@ -116,14 +134,18 @@ function useAuth() {
   const isLogin = getProfileQuery.isSuccess;
   const loginMutation = useEmailLogin();
   const kakaoLoginMutation = useKakaoLogin();
+  const appleLoginMutation = useAppleLogin();
   const logoutMutation = useLogout();
+  const profileMutation = useUpdateProfile();
 
   return {
     signupMutation,
     loginMutation,
     kakaoLoginMutation,
+    appleLoginMutation,
     logoutMutation,
     getProfileQuery,
+    profileMutation,
     isLogin,
     getProfile,
   };

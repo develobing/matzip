@@ -54,7 +54,7 @@ function FeedTabNavigator() {
           shadowColor: colors.GRAY_200,
         },
         headerTitleStyle: {
-          fontSize: 15,
+          fontSize: 20,
         },
         headerTintColor: colors.BLACK,
         tabBarShowLabel: false,

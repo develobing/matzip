@@ -11,11 +11,16 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FeedTabNavigator, {FeedTabParamList} from '../tab/FeedTabNavigator';
 import CustomDrawerContent from './CustomDrawerContent';
 import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
+import SettingStackNavigator, {
+  SettingStackParamList,
+} from '../stack/SettingStackNavigator';
+import SettingHeaderLeft from '@/components/setting/SettingHeaderLeft';
 
 export type MainDrawerParamList = {
   [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
   [mainNavigations.FEED]: NavigatorScreenParams<FeedTabParamList>;
   [mainNavigations.CALENDAR]: undefined;
+  [mainNavigations.SETTING]: NavigatorScreenParams<SettingStackParamList>;
 };
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
@@ -31,6 +36,9 @@ function DrawerIcons(route: RouteProp<MainDrawerParamList>, focused: boolean) {
       break;
     case mainNavigations.CALENDAR:
       iconsName = 'event-note';
+      break;
+    case mainNavigations.SETTING:
+      iconsName = 'settings';
       break;
   }
 
@@ -81,6 +89,14 @@ function MainDrawerNavigator() {
           headerShown: true,
           headerLeft: () => FeedHomeHeaderLeft(navigation),
         })}
+      />
+      <Drawer.Screen
+        name={mainNavigations.SETTING}
+        component={SettingStackNavigator}
+        options={{
+          title: '설정',
+          drawerItemStyle: {height: 0},
+        }}
       />
     </Drawer.Navigator>
   );
