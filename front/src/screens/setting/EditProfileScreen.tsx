@@ -1,5 +1,5 @@
 import InputField from '@/components/common/InputField';
-import {colors, errorMessages} from '@/constants';
+import {colors, errorMessages, settingNavigations} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
 import useForm from '@/hooks/useForm';
 import useImagePicker from '@/hooks/useImagePicker';
@@ -125,7 +125,9 @@ const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
         touched={editProfile.touched.nickname}
       />
 
-      <Pressable style={styles.deleteAccountContainer}>
+      <Pressable
+        style={styles.deleteAccountContainer}
+        onPress={() => navigation.navigate(settingNavigations.DELETE_ACCOUNT)}>
         <Ionicons name="remove-circle-sharp" size={18} color={colors.RED_500} />
         <Text style={styles.deleteAccountText}>회원탈퇴</Text>
       </Pressable>

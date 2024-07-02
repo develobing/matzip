@@ -91,6 +91,15 @@ const logout = async () => {
   await axiosInstance.post('/auth/logout');
 };
 
+const deleteAccount = async () => {
+  await axiosInstance.delete('/auth/me');
+};
+
+const editCategory = async (body: Category): Promise<ResponseProfile> => {
+  const {data} = await axiosInstance.patch('/auth/category', body);
+  return data;
+};
+
 export {
   postSignup,
   postLogin,
@@ -100,6 +109,8 @@ export {
   editProfile,
   getAccessToken,
   logout,
+  deleteAccount,
+  editCategory,
 };
 export type {
   RequestUser,

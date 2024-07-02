@@ -1,9 +1,9 @@
-import {MutationFunction, useMutation, useQuery} from '@tanstack/react-query';
-import {useEffect} from 'react';
 import {
   ResponseProfile,
   ResponseToken,
   appleLogin,
+  deleteAccount,
+  editCategory,
   editProfile,
   getAccessToken,
   getProfile,
@@ -14,13 +14,16 @@ import {
 } from '@/api/auth';
 import queryClient from '@/api/queryClient';
 import {numbers, queryKeys, storageKeys} from '@/constants';
+import {Category, Profile} from '@/types';
 import {UseMutationCustomOptions, UseQueryCustomOptions} from '@/types/common';
 import {
   removeEncryptStorage,
-  setEncryptStorage,
   removeHeader,
+  setEncryptStorage,
   setHeader,
 } from '@/utils';
+import {MutationFunction, useMutation, useQuery} from '@tanstack/react-query';
+import {useEffect} from 'react';
 
 function useSignup(options: UseMutationCustomOptions = {}) {
   return useMutation({
@@ -92,10 +95,23 @@ function useGetRefreshToken() {
   return {isSuccess, isError};
 }
 
-function useGetProfile(options?: UseQueryCustomOptions<ResponseProfile>) {
+type ResponseSelectProfile = {categories: Category} & Profile;
+
+const transformProfileCategory = (
+  data: ResponseProfile,
+): ResponseSelectProfile => {
+  const {BLUE, GREEN, PURPLE, RED, YELLOW, ...rest} = data;
+  const categories = {RED, YELLOW, GREEN, BLUE, PURPLE};
+  return {categories, ...rest};
+};
+
+function useGetProfile(
+  options?: UseQueryCustomOptions<ResponseProfile, ResponseSelectProfile>,
+) {
   return useQuery({
     queryFn: getProfile,
     queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
+    select: transformProfileCategory,
 
     ...options,
   });
@@ -121,7 +137,30 @@ function useUpdateProfile(options?: UseMutationCustomOptions) {
   return useMutation({
     mutationFn: editProfile,
     onSuccess: newProfile => {
-      queryClient.setQueryData([queryKeys.AUTH], newProfile);
+      queryClient.setQueryData(
+        [queryKeys.AUTH, queryKeys.GET_PROFILE],
+        newProfile,
+      );
+    },
+    ...options,
+  });
+}
+
+function useMutationDeleteAccount(options?: UseMutationCustomOptions) {
+  return useMutation({
+    mutationFn: deleteAccount,
+    ...options,
+  });
+}
+
+function useMutateCategory(options?: UseMutationCustomOptions) {
+  return useMutation({
+    mutationFn: editCategory,
+    onSuccess: newProfile => {
+      queryClient.setQueryData(
+        [queryKeys.AUTH, queryKeys.GET_PROFILE],
+        newProfile,
+      );
     },
     ...options,
   });
@@ -137,6 +176,10 @@ function useAuth() {
   const appleLoginMutation = useAppleLogin();
   const logoutMutation = useLogout();
   const profileMutation = useUpdateProfile();
+  const deleteAccountMutation = useMutationDeleteAccount({
+    onSuccess: () => logoutMutation.mutate(null),
+  });
+  const categoryMutation = useMutateCategory();
 
   return {
     signupMutation,
@@ -146,6 +189,8 @@ function useAuth() {
     logoutMutation,
     getProfileQuery,
     profileMutation,
+    deleteAccountMutation,
+    categoryMutation,
     isLogin,
     getProfile,
   };
