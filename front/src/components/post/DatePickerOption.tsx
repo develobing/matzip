@@ -1,4 +1,6 @@
 import {colors} from '@/constants';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types';
 import React from 'react';
 import {
   Modal,
@@ -23,6 +25,9 @@ const DatePickerOption = ({
   onChangeDate,
   onConfirmDate,
 }: DatePickerOptionProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
+
   return (
     <Modal transparent animationType="slide" visible={isVisible}>
       <SafeAreaView style={styles.optionBackground}>
@@ -45,35 +50,36 @@ const DatePickerOption = ({
   );
 };
 
-const styles = StyleSheet.create({
-  optionBackground: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    optionBackground: {
+      flex: 1,
+      justifyContent: 'flex-end',
+    },
 
-  optionContainer: {
-    borderRadius: 15,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    backgroundColor: colors.GRAY_100,
-    overflow: 'hidden',
-  },
+    optionContainer: {
+      borderRadius: 15,
+      marginHorizontal: 10,
+      marginBottom: 10,
+      backgroundColor: colors[theme].GRAY_100,
+      overflow: 'hidden',
+    },
 
-  pickerContainer: {alignItems: 'center'},
+    pickerContainer: {alignItems: 'center'},
 
-  optionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 50,
-    gap: 5,
-  },
+    optionButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: 50,
+      gap: 5,
+    },
 
-  optionText: {
-    color: colors.BLUE_500,
-    fontSize: 17,
-    fontWeight: 500,
-  },
-});
+    optionText: {
+      color: colors[theme].BLUE_500,
+      fontSize: 17,
+      fontWeight: 500,
+    },
+  });
 
 export default DatePickerOption;

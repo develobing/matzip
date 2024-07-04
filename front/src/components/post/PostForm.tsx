@@ -16,6 +16,7 @@ import useModal from '@/hooks/useModal';
 import usePermission from '@/hooks/usePermission';
 import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
 import useDetailStore from '@/store/useDetailPostStore';
+import useThemeStore from '@/store/useThemeStore';
 import {MarkerColor} from '@/types/domain';
 import {getDateWithSeparator, validateAddPost} from '@/utils';
 import {useNavigation} from '@react-navigation/native';
@@ -38,6 +39,7 @@ interface PostFormProps {
 }
 
 const PostForm = ({location, isEdit = false}: PostFormProps) => {
+  const {theme} = useThemeStore();
   const navigation = useNavigation<StackNavigationProp<FeedStackParamList>>();
   const createPost = useMutateCreatePost();
   const updatePost = useMutateUpdatePost();
@@ -144,7 +146,11 @@ const PostForm = ({location, isEdit = false}: PostFormProps) => {
           <InputField
             disabled={true}
             icon={
-              <Octicons name="location" size={16} color={colors.GRAY_500} />
+              <Octicons
+                name="location"
+                size={16}
+                color={colors[theme].GRAY_500}
+              />
             }
             value={address}
           />

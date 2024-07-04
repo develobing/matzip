@@ -7,6 +7,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HeaderButton from '../common/HeaderButton';
+import useThemeStore from '@/store/useThemeStore';
 
 type SettingHeaderLeftProps = CompositeNavigationProp<
   StackNavigationProp<SettingStackParamList>,
@@ -14,9 +15,11 @@ type SettingHeaderLeftProps = CompositeNavigationProp<
 >;
 
 const SettingHeaderLeft = (navigation: SettingHeaderLeftProps): JSX.Element => {
+  const {theme} = useThemeStore();
+
   return (
     <HeaderButton
-      icon={<Ionicons name="menu" color={colors.BLACK} size={24} />}
+      icon={<Ionicons name="menu" color={colors[theme].BLACK} size={24} />}
       onPress={() => navigation.openDrawer()}
     />
   );

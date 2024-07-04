@@ -1,10 +1,14 @@
 import {colors} from '@/constants';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types';
 import React from 'react';
 import {StyleSheet, View, Text, Dimensions} from 'react-native';
 
 interface DayOfWeeksProps {}
 
 const DayOfWeeks = ({}: DayOfWeeksProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
   const dayOfWeeks = ['일', '월', '화', '수', '목', '금', '토'];
 
   return (
@@ -25,29 +29,30 @@ const DayOfWeeks = ({}: DayOfWeeksProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    marginBottom: 5,
-  },
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      marginBottom: 5,
+    },
 
-  item: {
-    width: Dimensions.get('window').width / 7,
-    alignItems: 'center',
-  },
+    item: {
+      width: Dimensions.get('window').width / 7,
+      alignItems: 'center',
+    },
 
-  text: {
-    fontSize: 12,
-    color: colors.BLACK,
-  },
+    text: {
+      fontSize: 12,
+      color: colors[theme].BLACK,
+    },
 
-  saturdayText: {
-    color: colors.BLUE_500,
-  },
+    saturdayText: {
+      color: colors[theme].BLUE_500,
+    },
 
-  sundayText: {
-    color: colors.RED_500,
-  },
-});
+    sundayText: {
+      color: colors[theme].RED_500,
+    },
+  });
 
 export default DayOfWeeks;

@@ -1,16 +1,17 @@
+import {colors} from '@/constants';
+import useModal from '@/hooks/useModal';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types';
+import {MonthYear, isSameAsCurrentDate} from '@/utils';
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {FlatList, StyleSheet, View, Pressable, Text} from 'react-native';
+import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
-import {MonthYear, isSameAsCurrentDate} from '@/utils';
-import {colors} from '@/constants';
-import DayOfWeeks from './DayOfWeeks';
-import DateBox from './DateBox';
-import YearSelector from './YearSelector';
-import useModal from '@/hooks/useModal';
-import {useNavigation} from '@react-navigation/native';
 import CalendarHomHeaderRight from './CalendarHomHeaderRight';
+import DateBox from './DateBox';
+import DayOfWeeks from './DayOfWeeks';
+import YearSelector from './YearSelector';
 
 interface CalendarProps<T> {
   monthYear: MonthYear;
@@ -29,9 +30,11 @@ function Calendar<T>({
   onPressDate,
   onChangeMonth,
 }: CalendarProps<T>) {
+  const {theme} = useThemeStore();
   const navigation = useNavigation();
   const {month, year, lastDate, firstDOW} = monthYear;
   const yearSelector = useModal();
+  const styles = styling(theme);
 
   const onChangeYear = (selectedYear: number) => {
     onChangeMonth((selectedYear - year) * 12);
@@ -53,7 +56,7 @@ function Calendar<T>({
           <Ionicons
             name="arrow-up-circle-outline"
             size={25}
-            color={colors.BLACK}
+            color={colors[theme].BLACK}
           />
         </Pressable>
 
@@ -66,7 +69,7 @@ function Calendar<T>({
           <MaterialIcons
             name="keyboard-arrow-down"
             size={20}
-            color={colors.GRAY_500}
+            color={colors[theme].GRAY_500}
           />
         </Pressable>
         <Pressable
@@ -75,7 +78,7 @@ function Calendar<T>({
           <Ionicons
             name="arrow-down-circle-outline"
             size={25}
-            color={colors.BLACK}
+            color={colors[theme].BLACK}
           />
         </Pressable>
       </View>
@@ -111,32 +114,33 @@ function Calendar<T>({
   );
 }
 
-const styles = StyleSheet.create({
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: 25,
-    marginVertical: 16,
-  },
-  monthYearContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-  },
-  monthButtonContainer: {
-    padding: 10,
-  },
-  titleText: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: colors.BLACK,
-  },
-  bodyContainer: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.GRAY_300,
-    backgroundColor: colors.GRAY_100,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    headerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginHorizontal: 25,
+      marginVertical: 16,
+    },
+    monthYearContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 10,
+    },
+    monthButtonContainer: {
+      padding: 10,
+    },
+    titleText: {
+      fontSize: 18,
+      fontWeight: '500',
+      color: colors[theme].BLACK,
+    },
+    bodyContainer: {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors[theme].GRAY_300,
+      backgroundColor: colors[theme].GRAY_100,
+    },
+  });
 
 export default Calendar;

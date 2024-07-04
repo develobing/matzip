@@ -11,6 +11,8 @@ import {
   TextStyle,
 } from 'react-native';
 import {colors} from '@/constants';
+import {ThemeMode} from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 interface CustomButtonProps extends PressableProps {
   label: string;
@@ -34,6 +36,9 @@ function CustomButton({
   inValid = false,
   ...props
 }: CustomButtonProps) {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
+
   return (
     <Pressable
       disabled={inValid}
@@ -54,64 +59,65 @@ function CustomButton({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 3,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      borderRadius: 3,
+      justifyContent: 'center',
+      flexDirection: 'row',
+    },
 
-  inValid: {
-    opacity: 0.5,
-  },
+    inValid: {
+      opacity: 0.5,
+    },
 
-  filled: {backgroundColor: colors.PINK_700},
+    filled: {backgroundColor: colors[theme].PINK_700},
 
-  outlined: {
-    borderColor: colors.PINK_700,
-    borderWidth: 1,
-  },
+    outlined: {
+      borderColor: colors[theme].PINK_700,
+      borderWidth: 1,
+    },
 
-  filledPressed: {
-    backgroundColor: colors.PINK_500,
-  },
+    filledPressed: {
+      backgroundColor: colors[theme].PINK_500,
+    },
 
-  outlinedPressed: {
-    borderColor: colors.PINK_700,
-    borderWidth: 1,
-    opacity: 0.5,
-  },
+    outlinedPressed: {
+      borderColor: colors[theme].PINK_700,
+      borderWidth: 1,
+      opacity: 0.5,
+    },
 
-  large: {
-    width: '100%',
-    paddingVertical: deviceHeight > 700 ? 15 : 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-  },
+    large: {
+      width: '100%',
+      paddingVertical: deviceHeight > 700 ? 15 : 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+    },
 
-  medium: {
-    width: '50%',
-    paddingVertical: deviceHeight > 700 ? 12 : 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-  },
+    medium: {
+      width: '50%',
+      paddingVertical: deviceHeight > 700 ? 12 : 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+    },
 
-  text: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
+    text: {
+      fontSize: 16,
+      fontWeight: '700',
+    },
 
-  filledText: {
-    color: colors.WHITE,
-  },
+    filledText: {
+      color: colors[theme].WHITE,
+    },
 
-  outlinedText: {
-    color: colors.PINK_700,
-  },
-});
+    outlinedText: {
+      color: colors[theme].PINK_700,
+    },
+  });
 
 export default CustomButton;

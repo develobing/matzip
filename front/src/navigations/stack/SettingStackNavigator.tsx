@@ -4,6 +4,7 @@ import DeleteAccountScreen from '@/screens/setting/DeleteAccountScreen';
 import EditCategoryScreen from '@/screens/setting/EditCategoryScreen';
 import EditProfileScreen from '@/screens/setting/EditProfileScreen';
 import SettingHomeScreen from '@/screens/setting/SettingHomeScreen';
+import useThemeStore from '@/store/useThemeStore';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 
@@ -17,20 +18,23 @@ export type SettingStackParamList = {
 const Stack = createStackNavigator<SettingStackParamList>();
 
 function SettingStackNavigator({}) {
+  const {theme} = useThemeStore();
+
   return (
     <Stack.Navigator
       screenOptions={{
         cardStyle: {
-          backgroundColor: colors.GRAY_100,
+          backgroundColor: colors[theme].GRAY_100,
         },
         headerStyle: {
-          backgroundColor: 'white',
-          shadowColor: 'gray',
+          backgroundColor: colors[theme].WHITE,
+          shadowColor: colors[theme].GRAY_200,
         },
         headerTitleStyle: {
+          color: colors[theme].BLACK,
           fontSize: 20,
         },
-        headerTintColor: 'black',
+        headerTintColor: colors[theme].BLACK,
       }}>
       <Stack.Screen
         name={settingNavigations.SETTING_HOME}

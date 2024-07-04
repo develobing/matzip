@@ -4,6 +4,7 @@ import {colors, feedNavigations} from '@/constants';
 import EditPostScreen from '@/screens/feed/EditPostScreen';
 import FeedDetailScreen from '@/screens/feed/FeedDetailScreen';
 import FeedHomeScreen from '@/screens/feed/FeedHomeScreen';
+import useThemeStore from '@/store/useThemeStore';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {LatLng} from 'react-native-maps';
@@ -18,20 +19,23 @@ export type FeedStackParamList = {
 const Stack = createStackNavigator<FeedStackParamList>();
 
 function FeedStackNavigator({}) {
+  const {theme} = useThemeStore();
+
   return (
     <Stack.Navigator
       screenOptions={{
         cardStyle: {
-          backgroundColor: 'white',
+          backgroundColor: colors[theme].WHITE,
         },
         headerStyle: {
-          backgroundColor: 'white',
-          shadowColor: 'gray',
+          backgroundColor: colors[theme].WHITE,
+          shadowColor: colors[theme].GRAY_200,
         },
         headerTitleStyle: {
+          color: colors[theme].BLACK,
           fontSize: 20,
         },
-        headerTintColor: 'black',
+        headerTintColor: colors[theme].BLACK,
       }}>
       <Stack.Screen
         name={feedNavigations.FEED_HOME}
@@ -48,7 +52,7 @@ function FeedStackNavigator({}) {
           headerShown: false,
           headerTitle: ' ',
           cardStyle: {
-            backgroundColor: colors.GRAY_100,
+            backgroundColor: colors[theme].GRAY_100,
           },
         }}
       />

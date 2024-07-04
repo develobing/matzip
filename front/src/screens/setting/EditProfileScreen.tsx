@@ -21,13 +21,17 @@ import Toast from 'react-native-toast-message';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import EditProfileHeaderRight from './EditProfileHeaderRight';
 import EditProfileImageOption from './EditProfileImageOption';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types';
 
 type EditProfileScreenProps = StackScreenProps<SettingStackParamList>;
 
 const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
+  const {theme} = useThemeStore();
   const {getProfileQuery, profileMutation} = useAuth();
   const {nickname, imageUri, kakaoImageUri} = getProfileQuery.data || {};
   const imageModal = useModal();
+  const styles = styling(theme);
 
   const imagePicker = useImagePicker({
     initialImages: imageUri ? [{uri: imageUri}] : [],
@@ -85,7 +89,7 @@ const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
           style={[styles.imageContainer, styles.emptyImageContainer]}
           onPress={handlePressImage}>
           {imagePicker.imageUris.length === 0 && !kakaoImageUri && (
-            <Ionicons name="camera" color={colors.GRAY_500} size={30} />
+            <Ionicons name="camera" color={colors[theme].GRAY_500} size={30} />
           )}
 
           {imagePicker.imageUris.length > 0 && (
@@ -128,7 +132,11 @@ const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
       <Pressable
         style={styles.deleteAccountContainer}
         onPress={() => navigation.navigate(settingNavigations.DELETE_ACCOUNT)}>
-        <Ionicons name="remove-circle-sharp" size={18} color={colors.RED_500} />
+        <Ionicons
+          name="remove-circle-sharp"
+          size={18}
+          color={colors[theme].RED_500}
+        />
         <Text style={styles.deleteAccountText}>회원탈퇴</Text>
       </Pressable>
 
@@ -141,49 +149,50 @@ const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  profileContainer: {
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 40,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 50,
-  },
-  imageContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  emptyImageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: colors.GRAY_200,
-    borderRadius: 50,
-    borderWidth: 1,
-  },
-  deleteAccountContainer: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-    right: 20,
-    bottom: 70,
-    backgroundColor: colors.GRAY_100,
-    borderRadius: 10,
-    padding: 10,
-  },
-  deleteAccountText: {
-    color: colors.RED_500,
-    fontSize: 15,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+    },
+    profileContainer: {
+      alignItems: 'center',
+      marginTop: 20,
+      marginBottom: 40,
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 50,
+    },
+    imageContainer: {
+      width: 100,
+      height: 100,
+      borderRadius: 50,
+    },
+    emptyImageContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderColor: colors[theme].GRAY_200,
+      borderRadius: 50,
+      borderWidth: 1,
+    },
+    deleteAccountContainer: {
+      position: 'absolute',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+      right: 20,
+      bottom: 70,
+      backgroundColor: colors[theme].GRAY_100,
+      borderRadius: 10,
+      padding: 10,
+    },
+    deleteAccountText: {
+      color: colors[theme].RED_500,
+      fontSize: 15,
+    },
+  });
 
 export default EditProfileScreen;

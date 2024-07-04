@@ -2,11 +2,14 @@ import Calendar from '@/components/calendar/Calendar';
 import EventList from '@/components/calendar/EventList';
 import {colors} from '@/constants';
 import useGetCalendarPosts from '@/hooks/queries/useGetCalendarPosts';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types';
 import {getMonthYearDetails, getNewMonthYear} from '@/utils';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 
 function CalendarHomeScreen() {
+  const {theme} = useThemeStore();
   const currentMonthYear = getMonthYearDetails(new Date());
   const [monthYear, setMonthYear] = useState(currentMonthYear);
   const [selectedDate, setSelectedDate] = useState(0);
@@ -15,13 +18,13 @@ function CalendarHomeScreen() {
     isPending,
     isError,
   } = useGetCalendarPosts(monthYear.year, monthYear.month);
+  const styles = styling(theme);
 
   useEffect(() => {
     moveToToday();
   }, []);
 
   const moveToToday = () => {
-    console.log('moveToToday() - selectedDate', selectedDate);
     setSelectedDate(new Date().getDate());
     setMonthYear(getMonthYearDetails(new Date()));
   };
@@ -54,11 +57,12 @@ function CalendarHomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.WHITE,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors[theme].WHITE,
+    },
+  });
 
 export default CalendarHomeScreen;

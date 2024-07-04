@@ -1,10 +1,9 @@
+import {storageKeys} from '@/constants';
+import useThemeStore from '@/store/useThemeStore';
+import type {ThemeMode} from '@/types';
+import {getEncryptStorage, setEncryptStorage} from '@/utils';
 import {useEffect} from 'react';
 import {useColorScheme} from 'react-native';
-
-import {storageKeys} from '@/constants';
-import type {ThemeMode} from '@/types';
-import useThemeStore from '@/store/useThemeStore';
-import {getEncryptStorage, setEncryptStorage} from '@/utils';
 
 function useThemeStorage() {
   const systemTheme = useColorScheme();

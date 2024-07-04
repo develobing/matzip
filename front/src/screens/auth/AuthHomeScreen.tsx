@@ -19,6 +19,8 @@ import appleAuth, {
 } from '@invertase/react-native-apple-authentication';
 import useAuth from '@/hooks/queries/useAuth';
 import Toast from 'react-native-toast-message';
+import {ThemeMode} from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 type AuthHomeScreenProps = StackScreenProps<
   AuthStackParamList,
@@ -26,7 +28,9 @@ type AuthHomeScreenProps = StackScreenProps<
 >;
 
 function AuthHomeScreen({navigation}: AuthHomeScreenProps) {
+  const {theme} = useThemeStore();
   const {appleLoginMutation} = useAuth();
+  const styles = styling(theme);
 
   const handlePressAppleLogin = async () => {
     try {
@@ -101,50 +105,51 @@ function AuthHomeScreen({navigation}: AuthHomeScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    margin: 30,
-    alignItems: 'center',
-  },
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      margin: 30,
+      alignItems: 'center',
+    },
 
-  imageContainer: {
-    flex: 1.5,
-    width: '100%',
-  },
+    imageContainer: {
+      flex: 1.5,
+      width: '100%',
+    },
 
-  image: {
-    width: '100%',
-    height: '100%',
-  },
+    image: {
+      width: '100%',
+      height: '100%',
+    },
 
-  buttonContainer: {
-    flex: 1,
-    gap: 10,
-  },
+    buttonContainer: {
+      flex: 1,
+      gap: 10,
+    },
 
-  kakaoButtonContainer: {
-    backgroundColor: '#FEE503',
-  },
+    kakaoButtonContainer: {
+      backgroundColor: '#FEE503',
+    },
 
-  kakaoButtonText: {
-    color: '#181500',
-  },
+    kakaoButtonText: {
+      color: '#181500',
+    },
 
-  emailTextContainer: {alignItems: 'center'},
+    emailTextContainer: {alignItems: 'center'},
 
-  emailText: {
-    textDecorationLine: 'underline',
-    fontWeight: '500',
-    padding: 10,
-    color: colors.BLACK,
-  },
+    emailText: {
+      textDecorationLine: 'underline',
+      fontWeight: '500',
+      padding: 10,
+      color: colors[theme].BLACK,
+    },
 
-  appleButton: {
-    width: Dimensions.get('screen').width - 60,
-    height: 45,
-    paddingVertical: 25,
-  },
-});
+    appleButton: {
+      width: Dimensions.get('screen').width - 60,
+      height: 45,
+      paddingVertical: 25,
+    },
+  });
 
 export default AuthHomeScreen;

@@ -3,7 +3,8 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import CustomMarker from '../common/CustomMarker';
 import {colors} from '@/constants';
 import {ScrollView} from 'react-native';
-import {MarkerColor} from '@/types';
+import {MarkerColor, ThemeMode} from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 interface MarkerSelectorProps {
   score: number;
@@ -16,6 +17,8 @@ const MarkerSelector = ({
   markerColor,
   onPressMarker,
 }: MarkerSelectorProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
   const categoryList: MarkerColor[] = [
     'RED',
     'YELLOW',
@@ -47,36 +50,37 @@ const MarkerSelector = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderColor: colors.GRAY_200,
-    padding: 15,
-  },
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      borderWidth: 1,
+      borderColor: colors[theme].GRAY_200,
+      padding: 15,
+    },
 
-  markerLabel: {
-    marginBottom: 15,
-    color: colors.GRAY_700,
-  },
+    markerLabel: {
+      marginBottom: 15,
+      color: colors[theme].GRAY_700,
+    },
 
-  markerInputScroll: {
-    flexDirection: 'row',
-    gap: 20,
-  },
+    markerInputScroll: {
+      flexDirection: 'row',
+      gap: 20,
+    },
 
-  markerBox: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 55,
-    height: 55,
-    borderRadius: 6,
-    backgroundColor: colors.GRAY_100,
-  },
+    markerBox: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 55,
+      height: 55,
+      borderRadius: 6,
+      backgroundColor: colors[theme].GRAY_100,
+    },
 
-  pressedMarker: {
-    borderWidth: 2,
-    borderColor: colors.RED_500,
-  },
-});
+    pressedMarker: {
+      borderWidth: 2,
+      borderColor: colors[theme].RED_500,
+    },
+  });
 
 export default MarkerSelector;

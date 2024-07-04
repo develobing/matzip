@@ -9,6 +9,8 @@ import Toast, {
 import queryClient from './src/api/queryClient';
 import RootNavigator from './src/navigations/RootNavigator';
 import {colors} from '@/constants';
+import {StatusBar} from 'react-native';
+import useThemeStorage from '@/hooks/useThemeStorage';
 
 /*
   1. Create the config
@@ -21,7 +23,7 @@ const toastConfig = {
   success: (props: BaseToastProps) => (
     <BaseToast
       {...props}
-      style={{borderLeftColor: colors.BLUE_500}}
+      style={{borderLeftColor: colors.light.BLUE_500}}
       text1Style={{
         fontSize: 14,
       }}
@@ -37,7 +39,7 @@ const toastConfig = {
   error: (props: BaseToastProps) => (
     <ErrorToast
       {...props}
-      style={{borderLeftColor: colors.RED_500}}
+      style={{borderLeftColor: colors.light.RED_500}}
       text1Style={{
         fontSize: 14,
       }}
@@ -61,8 +63,14 @@ const toastConfig = {
 // }
 
 function App(): JSX.Element {
+  const {theme} = useThemeStorage();
+
   return (
     <QueryClientProvider client={queryClient}>
+      <StatusBar
+        barStyle={theme === 'light' ? 'dark-content' : 'light-content'}
+      />
+
       <NavigationContainer>
         <RootNavigator />
         <Toast config={toastConfig} />
