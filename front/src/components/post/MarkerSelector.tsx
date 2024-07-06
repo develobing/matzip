@@ -1,7 +1,7 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import CustomMarker from '../common/CustomMarker';
-import {colors} from '@/constants';
+import {categoryList, colors} from '@/constants';
 import {ScrollView} from 'react-native';
 import {MarkerColor, ThemeMode} from '@/types';
 import useThemeStore from '@/store/useThemeStore';
@@ -19,13 +19,6 @@ const MarkerSelector = ({
 }: MarkerSelectorProps) => {
   const {theme} = useThemeStore();
   const styles = styling(theme);
-  const categoryList: MarkerColor[] = [
-    'RED',
-    'YELLOW',
-    'GREEN',
-    'BLUE',
-    'PURPLE',
-  ];
 
   return (
     <View style={styles.container}>

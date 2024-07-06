@@ -14,7 +14,6 @@ import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Toast from 'react-native-toast-message';
-
 import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import useModal from '@/hooks/useModal';
@@ -31,6 +30,8 @@ import useThemeStore from '@/store/useThemeStore';
 import {ThemeMode} from '@/types';
 import useLegendStorage from '@/hooks/useLegendStorage';
 import MapLegend from '@/components/map/MapLegend';
+import MarkerFilterOption from './MarkerFilterOption';
+import useMarkerFilter from '@/hooks/useMarkerFilter';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -45,7 +46,11 @@ function MapHomeScreen() {
   const {selectLocation, setSelectLocation} = useLocationStore();
   const [markerId, setMarkerId] = useState<number | null>(null);
   const markerModal = useModal();
-  const {data: markers = []} = useGetMarkers();
+  const filterOption = useModal();
+  const markerFilter = useMarkerFilter();
+  const {data: markers = []} = useGetMarkers({
+    select: markerFilter.transformFilteredMarker,
+  });
   const {mapRef, moveMapView, handleChangeDelta} = useMoveMapView();
   const legend = useLegendStorage();
   const styles = styling(theme);
@@ -137,6 +142,13 @@ function MapHomeScreen() {
         <Pressable style={styles.mapButton} onPress={handlePressSearch}>
           <Ionicons name="search" color={colors[theme].WHITE} size={25} />
         </Pressable>
+        <Pressable style={styles.mapButton} onPress={filterOption.show}>
+          <Ionicons
+            name="options-outline"
+            color={colors[theme].WHITE}
+            size={25}
+          />
+        </Pressable>
         <Pressable style={styles.mapButton} onPress={handlePressUserLocation}>
           <MaterialIcons
             name="my-location"
@@ -150,6 +162,11 @@ function MapHomeScreen() {
         markerId={markerId}
         isVisible={markerModal.isVisible}
         hide={markerModal.hide}
+      />
+
+      <MarkerFilterOption
+        isVisible={filterOption.isVisible}
+        hideOption={filterOption.hide}
       />
 
       {legend.isVisible && <MapLegend />}

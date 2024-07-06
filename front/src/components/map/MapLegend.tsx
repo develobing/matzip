@@ -4,16 +4,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import useAuth from '@/hooks/queries/useAuth';
 import useThemeStore from '@/store/useThemeStore';
-import {colorHex, colors} from '@/constants';
-import type {ThemeMode, Category, MarkerColor} from '@/types';
-
-const categoryList: MarkerColor[] = [
-  'RED',
-  'YELLOW',
-  'GREEN',
-  'BLUE',
-  'PURPLE',
-];
+import {categoryList, colorHex, colors} from '@/constants';
+import type {ThemeMode, Category} from '@/types';
 
 function MapLegend() {
   const {theme} = useThemeStore();
