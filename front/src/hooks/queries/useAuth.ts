@@ -28,7 +28,7 @@ import {useEffect} from 'react';
 function useSignup(options: UseMutationCustomOptions = {}) {
   return useMutation({
     mutationFn: postSignup,
-
+    throwOnError: error => Number(error.response?.status) >= 500,
     ...options,
   });
 }
